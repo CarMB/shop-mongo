@@ -2,6 +2,7 @@ package org.iesfm.shop.api.controller;
 
 import org.iesfm.shop.Client;
 import org.iesfm.shop.repository.ClientRepository;
+import org.iesfm.shop.services.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,22 +15,21 @@ import java.util.List;
 @RestController
 public class ClientController {
 
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
-    public ClientController(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/clients")
     public void insert(@RequestBody Client client) {
-        if(clientRepository.existsById(client.getNif())) {
+        if(!clientService.insert(client)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe el cliente");
         }
-        clientRepository.insert(client);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/clients")
     public List<Client> list() {
-        return clientRepository.findAll();
+        return clientService.list();
     }
 }
