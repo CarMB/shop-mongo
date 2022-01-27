@@ -13,9 +13,14 @@ import java.util.List;
 
 @RestController
 public class ArticleController {
-    @Autowired
+
     private ArticleService articleService;
     private OrderService orderService;
+
+    public ArticleController(ArticleService articleService, OrderService orderService) {
+        this.articleService = articleService;
+        this.orderService = orderService;
+    }
 
     @RequestMapping(method = RequestMethod.POST, path = "/articles")
     public void insert(@RequestBody Article article) {
